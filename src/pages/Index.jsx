@@ -1,7 +1,7 @@
-import { Box, Container, Flex, Heading, Link, Text, VStack, HStack, SimpleGrid, Divider } from "@chakra-ui/react";
+import { Box, Container, Flex, Heading, Link, Text, VStack, HStack, SimpleGrid, Divider, Image } from "@chakra-ui/react";
 import { FaFacebook, FaTwitter, FaInstagram } from "react-icons/fa";
 
-const Index = () => {
+const Index = ({ recipes }) => {
   return (
     <Box>
       {/* Navigation Bar */}
@@ -10,9 +10,9 @@ const Index = () => {
           <Flex justify="space-between" align="center">
             <Heading as="h1" size="lg">Recipe Share</Heading>
             <HStack spacing={8}>
-              <Link href="#" fontSize="lg">Home</Link>
+              <Link href="/" fontSize="lg">Home</Link>
               <Link href="#" fontSize="lg">Recipes</Link>
-              <Link href="#" fontSize="lg">Submit a Recipe</Link>
+              <Link href="/submit" fontSize="lg">Submit a Recipe</Link>
               <Link href="#" fontSize="lg">Contact</Link>
             </HStack>
           </Flex>
@@ -31,22 +31,14 @@ const Index = () => {
       <Container maxW="container.lg" py={10}>
         <Heading as="h2" size="xl" mb={6}>Latest Recipes</Heading>
         <SimpleGrid columns={{ base: 1, md: 2 }} spacing={10}>
-          <Box p={5} shadow="md" borderWidth="1px">
-            <Heading fontSize="xl">Recipe Title 1</Heading>
-            <Text mt={4}>A short description of the recipe goes here. It's a brief summary to entice readers to click and read more.</Text>
-          </Box>
-          <Box p={5} shadow="md" borderWidth="1px">
-            <Heading fontSize="xl">Recipe Title 2</Heading>
-            <Text mt={4}>A short description of the recipe goes here. It's a brief summary to entice readers to click and read more.</Text>
-          </Box>
-          <Box p={5} shadow="md" borderWidth="1px">
-            <Heading fontSize="xl">Recipe Title 3</Heading>
-            <Text mt={4}>A short description of the recipe goes here. It's a brief summary to entice readers to click and read more.</Text>
-          </Box>
-          <Box p={5} shadow="md" borderWidth="1px">
-            <Heading fontSize="xl">Recipe Title 4</Heading>
-            <Text mt={4}>A short description of the recipe goes here. It's a brief summary to entice readers to click and read more.</Text>
-          </Box>
+          {recipes.map((recipe, index) => (
+            <Box key={index} p={5} shadow="md" borderWidth="1px">
+              <Heading fontSize="xl">{recipe.title}</Heading>
+              {recipe.image && <Image src={recipe.image} alt={recipe.title} mt={4} />}
+              <Text mt={4}>{recipe.ingredients}</Text>
+              <Text mt={4}>{recipe.instructions}</Text>
+            </Box>
+          ))}
         </SimpleGrid>
       </Container>
 
