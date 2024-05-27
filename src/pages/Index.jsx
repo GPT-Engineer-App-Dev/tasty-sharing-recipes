@@ -1,7 +1,44 @@
-import { Box, Container, Flex, Heading, Link, Text, VStack, HStack, SimpleGrid, Divider, Image } from "@chakra-ui/react";
-import { FaFacebook, FaTwitter, FaInstagram } from "react-icons/fa";
+import { Box, Container, Flex, Heading, Link, Text, VStack, HStack, SimpleGrid, Divider, Image, IconButton } from "@chakra-ui/react";
+import { FaFacebook, FaTwitter, FaInstagram, FaStar } from "react-icons/fa";
+import { useState } from "react";
+
+const Rating = ({ rating, onRate }) => {
+  const [hover, setHover] = useState(null);
+
+  return (
+    <HStack spacing={1}>
+      {[...Array(5)].map((_, index) => {
+        const ratingValue = index + 1;
+        return (
+          <IconButton
+            key={index}
+            icon={<FaStar />}
+            color={ratingValue <= (hover || rating) ? "yellow.400" : "gray.300"}
+            onClick={() => onRate(ratingValue)}
+            onMouseEnter={() => setHover(ratingValue)}
+            onMouseLeave={() => setHover(null)}
+            variant="ghost"
+            size="lg"
+          />
+        );
+      })}
+    </HStack>
+  );
+};
 
 const Index = ({ recipes }) => {
+  const [ratings, setRatings] = useState(recipes.map(() => 0));
+  const [ratingCounts, setRatingCounts] = useState(recipes.map(() => 0));
+
+  const handleRate = (index, rating) => {
+    const newRatings = [...ratings];
+    const newRatingCounts = [...ratingCounts];
+    newRatings[index] = (newRatings[index] * newRatingCounts[index] + rating) / (newRatingCounts[index] + 1);
+    newRatingCounts[index] += 1;
+    setRatings(newRatings);
+    setRatingCounts(newRatingCounts);
+  };
+
   return (
     <Box>
       {/* Navigation Bar */}
@@ -37,6 +74,8 @@ const Index = ({ recipes }) => {
               {recipe.image && <Image src={recipe.image} alt={recipe.title} mt={4} />}
               <Text mt={4}>{recipe.ingredients}</Text>
               <Text mt={4}>{recipe.instructions}</Text>
+              <Rating rating={ratings[index]} onRate={(rating) => handleRate(index, rating)} />
+              <Text mt={2}>Average Rating: {ratings[index].toFixed(1)} ({ratingCounts[index]} ratings)</Text>
             </Box>
           ))}
         </SimpleGrid>
